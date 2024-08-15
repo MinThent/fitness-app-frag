@@ -19,11 +19,11 @@ function Header(props) {
     )
 }
 
-export default function Generator() {
+export default function Generator(props) {
+
+    const { muscles, setMuscle, poison, setPoison, goal, setGoal, updateWorkout } = props
     const [showModal, setShowModal] = useState(false)
-    const [poison, setPoison] = useState('individual')
-    const [muscles, setMuscle] = useState([])
-    const [goal, setGoal] = useState('strength_power')
+
 
     function toggleModal() {
         setShowModal(!showModal)
@@ -50,84 +50,85 @@ export default function Generator() {
     }
 
     return (
-        <><SectionWrapper header={"generate your workout"}
-            title={['It\'s', ' Huge', 'o\'clock']}>
-            <Header index={'01'}
-                title={'Pick your poison'}
-                description={'Select your Workout you wish to endure'} />
-            <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+        <>
+            <SectionWrapper header={"generate your workout"}
+                title={['It\'s', ' Huge', 'o\'clock']}>
+                <Header index={'01'}
+                    title={'Pick your poison'}
+                    description={'Select your Workout you wish to endure'} />
+                <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
 
-                {Object.keys(WORKOUTS).map((type, typeIndex) => {
-                    return (
-                        <button onClick={() => {
-                            setMuscle([])
-                            setPoison(type)
-                        }} className={'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
-                            + (type === poison ? ' border-blue-600' : ' border-blue-400')
-                /* a bug where u have to put a space before assigning a value lol*/}
-                            key={typeIndex}>
-                            <p className='capitalize'>
-                                {type.replaceAll('_', " ")}
-                            </p>
-                        </button>
-                    )
-                })}
-            </div>
+                    {Object.keys(WORKOUTS).map((type, typeIndex) => {
+                        return (
+                            <button onClick={() => {
+                                setMuscle([])
+                                setPoison(type)
+                            }} className={'bg-slate-950 border px-4 py-3 rounded-lg duration-200 hover:border-blue-600'
+                                + (type === poison ? ' border-blue-600' : ' border-blue-400')
+                /* some feature where u have to put a space before assigning a value lol*/}
+                                key={typeIndex}>
+                                <p className='capitalize'>
+                                    {type.replaceAll('_', " ")}
+                                </p>
+                            </button>
+                        )
+                    })}
+                </div>
 
-            <Header index={'02'}
-                title={'Lock on Targets'}
-                description={'Select the muscles judged for annihilation'} />
-            <div className='bg-slate-950 border flex flex-col border-solid border-blue-400 rounded-lg'>
-                <button onClick={toggleModal} className='relative p-3 flex items-center justify-center'>
-                    <p className='capitalize'>{muscles.length == 0 ? "Select muscle groups" : muscles.join(' ')}</p>
-                    <i className="fa-solid fa-arrow-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                </button>
+                <Header index={'02'}
+                    title={'Lock on Targets'}
+                    description={'Select the muscles judged for annihilation'} />
+                <div className='bg-slate-950 border flex flex-col border-solid border-blue-400 rounded-lg'>
+                    <button onClick={toggleModal} className='relative p-3 flex items-center justify-center'>
+                        <p className='capitalize'>{muscles.length == 0 ? "Select muscle groups" : muscles.join(' ')}</p>
+                        <i className="fa-solid fa-arrow-down absolute right-3 top-1/2 -translate-y-1/2"></i>
+                    </button>
 
-                {showModal && (
-                    <div className='flex flex-col px-3 pb-3 '>
-                        {(poison ===
+                    {showModal && (
+                        <div className='flex flex-col px-3 pb-3 '>
+                            {(poison ===
 
-                            'individual' ?
-                            WORKOUTS[poison] :
-                            Object.keys(WORKOUTS[poison]))
-                            .map((muscleGroup, muscleGroupIndex) => {
-                                return (
-                                    <button onClick={() => {
-                                        updateMuscle(muscleGroup)
-                                    }} key={muscleGroupIndex}
-                                        className={'hover:text-blue-400 duration-200 '
-                                            + (muscles.includes(muscleGroup) ? ' text-blue-400' : '')}>
+                                'individual' ?
+                                WORKOUTS[poison] :
+                                Object.keys(WORKOUTS[poison]))
+                                .map((muscleGroup, muscleGroupIndex) => {
+                                    return (
+                                        <button onClick={() => {
+                                            updateMuscle(muscleGroup)
+                                        }} key={muscleGroupIndex}
+                                            className={'hover:text-blue-400 duration-200 '
+                                                + (muscles.includes(muscleGroup) ? ' text-blue-400' : '')}>
 
-                                        <p className='uppercase'>{muscleGroup.replaceAll('_', ' ')}</p>
-                                    </button>
-                                )
-                            })}
-                    </div>
-                )}
-            </div>
+                                            <p className='uppercase'>{muscleGroup.replaceAll('_', ' ')}</p>
+                                        </button>
+                                    )
+                                })}
+                        </div>
+                    )}
+                </div>
 
-            <Header index={'03'}
-                title={'Become Juggarnaut'}
-                description={'Select your ultimate objective'} />
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                <Header index={'03'}
+                    title={'Become Juggarnaut'}
+                    description={'Select your ultimate objective'} />
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
 
-                {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
-                    return (
-                        <button onClick={() => setGoal(scheme)} className={'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
-                            + (scheme === goal ? ' border-blue-600' : ' border-blue-400')} key={schemeIndex}>
-                            <p className='capitalize'>
-                                {scheme.replaceAll('_', " ")}
-                            </p>
-                        </button>
-                    )
-                })}
-            </div>
+                    {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
+                        return (
+                            <button onClick={() => setGoal(scheme)} className={'bg-slate-950 border py-3 px-4 rounded-lg duration-200 hover:border-blue-600'
+                                + (scheme === goal ? ' border-blue-600' : ' border-blue-400')} key={schemeIndex}>
+                                <p className='capitalize'>
+                                    {scheme.replaceAll('_', " ")}
+                                </p>
+                            </button>
+                        )
+                    })}
+                </div>
 
 
 
-        </SectionWrapper>
+            </SectionWrapper>
 
-            <Button text={"Formulate"} />
+            <Button func={updateWorkout} text={"Formulate"} />
         </>
     )
 }
