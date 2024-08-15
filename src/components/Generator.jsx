@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import SectionWrapper from './SectionWrapper'
 import { WORKOUTS } from '../utils/swoldier'
 import { SCHEMES } from '../utils/swoldier'
+import Button from './Button'
 
 
 function Header(props) {
@@ -21,15 +22,35 @@ function Header(props) {
 export default function Generator() {
     const [showModal, setShowModal] = useState(false)
     const [poison, setPoison] = useState('individual')
-    const [muscle, setMuscle] = useState('[]')
-    const [goals, setGoals] = useState('strength_power')
+    const [muscles, setMuscle] = useState([])
+    const [goal, setGoal] = useState('strength_power')
 
     function toggleModal() {
         setShowModal(!showModal)
     }
 
+    function updateMuscle(muscleGroup) {
+        if (muscles.includes(muscleGroup)) {
+            setMuscle(muscles.filter(val => val !== muscleGroup))
+            return
+        }
+
+        if (muscles.length > 2)
+            return
+
+        if (poison !== 'individual') {
+            setMuscle([muscleGroup])
+            setShowModal(false)
+            return
+        }
+
+        setMuscle([...muscles, muscleGroup])
+        if (muscles.length === 2)
+            setShowModal(false)
+    }
+
     return (
-        <SectionWrapper header={"generate your workout"}
+        <><SectionWrapper header={"generate your workout"}
             title={['It\'s', ' Huge', 'o\'clock']}>
             <Header index={'01'}
                 title={'Pick your poison'}
@@ -38,10 +59,12 @@ export default function Generator() {
 
                 {Object.keys(WORKOUTS).map((type, typeIndex) => {
                     return (
-                        <button onClick={() => setPoison(type)} className=
-                            {'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
-                                + (type === poison ? ' border-blue-600' : ' border-blue-400')
-                            /* a bug where u have to put a space before assigning a value lol*/}
+                        <button onClick={() => {
+                            setMuscle([])
+                            setPoison(type)
+                        }} className={'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
+                            + (type === poison ? ' border-blue-600' : ' border-blue-400')
+                /* a bug where u have to put a space before assigning a value lol*/}
                             key={typeIndex}>
                             <p className='capitalize'>
                                 {type.replaceAll('_', " ")}
@@ -56,14 +79,29 @@ export default function Generator() {
                 description={'Select the muscles judged for annihilation'} />
             <div className='bg-slate-950 border flex flex-col border-solid border-blue-400 rounded-lg'>
                 <button onClick={toggleModal} className='relative p-3 flex items-center justify-center'>
-                    <p>Select muscle groups</p>
-                    <i className="fa-solid fa-arrow-down
-                    absolute right-3 top-1/2 -translate-y-1/2"></i>
+                    <p className='capitalize'>{muscles.length == 0 ? "Select muscle groups" : muscles.join(' ')}</p>
+                    <i className="fa-solid fa-arrow-down absolute right-3 top-1/2 -translate-y-1/2"></i>
                 </button>
 
                 {showModal && (
-                    <div>
-                        Modal in the middle
+                    <div className='flex flex-col px-3 pb-3 '>
+                        {(poison ===
+
+                            'individual' ?
+                            WORKOUTS[poison] :
+                            Object.keys(WORKOUTS[poison]))
+                            .map((muscleGroup, muscleGroupIndex) => {
+                                return (
+                                    <button onClick={() => {
+                                        updateMuscle(muscleGroup)
+                                    }} key={muscleGroupIndex}
+                                        className={'hover:text-blue-400 duration-200 '
+                                            + (muscles.includes(muscleGroup) ? ' text-blue-400' : '')}>
+
+                                        <p className='uppercase'>{muscleGroup.replaceAll('_', ' ')}</p>
+                                    </button>
+                                )
+                            })}
                     </div>
                 )}
             </div>
@@ -71,14 +109,12 @@ export default function Generator() {
             <Header index={'03'}
                 title={'Become Juggarnaut'}
                 description={'Select your ultimate objective'} />
-            <div className='grid grid-cols-3'>
+            <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
 
                 {Object.keys(SCHEMES).map((scheme, schemeIndex) => {
                     return (
-                        <button onClick={() => setGoals(scheme)} className=
-                        {'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
-                            + (scheme === goals ? ' border-blue-600' : ' border-blue-400')
-                        } key={schemeIndex}>
+                        <button onClick={() => setGoal(scheme)} className={'bg-slate-950 border py-3 rounded-lg duration-200 hover:border-blue-600'
+                            + (scheme === goal ? ' border-blue-600' : ' border-blue-400')} key={schemeIndex}>
                             <p className='capitalize'>
                                 {scheme.replaceAll('_', " ")}
                             </p>
@@ -90,5 +126,8 @@ export default function Generator() {
 
 
         </SectionWrapper>
+
+            <Button text={"Formulate"} />
+        </>
     )
 }
