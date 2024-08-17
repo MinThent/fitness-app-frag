@@ -23,7 +23,9 @@ export default function Hero() {
                 <span className='text-blue-400 font-medium'> mass montrosity</span>,
                 afflicted with severe body dismorphia, unable to fit through doors
             </p>
-            <Button text={"Accept and Begin"} />
+            <Button func={() => {
+                window.location.href = '#generate'
+            }} text={"Accept and Begin"} />
         </div>
     )
 }
